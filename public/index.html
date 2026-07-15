@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Noor — Book an Appointment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c1a19; --ink-soft:#2a2725; --ivory:#f7f1e8;
+    --rose:#b85c6b; --rose-deep:#9c4a58; --brass:#b08a4e; --sage:#7c8c7a;
+    --line: rgba(247,241,232,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Manrope', sans-serif; background:var(--ivory); color:var(--ink); -webkit-font-smoothing:antialiased;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+  nav{position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:18px 6vw; background:rgba(28,26,25,0.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  .brand{color:var(--ivory); font-family:'Fraunces', serif; font-weight:600; font-size:1.3rem;}
+  .brand span{color:var(--brass);}
+  .nav-cta{background:var(--rose); color:var(--ivory); border:none; padding:10px 20px; border-radius:2px; font-weight:600; font-size:0.85rem; transition:background 0.2s ease;}
+  .nav-cta:hover{background:var(--rose-deep);}
+  .hero{background:var(--ink); color:var(--ivory); min-height:78vh; display:flex; flex-direction:column; justify-content:center; padding:8vh 6vw; position:relative; overflow:hidden;}
+  .hero::before{content:""; position:absolute; inset:0; background:radial-gradient(circle at 85% 20%, rgba(176,138,78,0.16), transparent 45%), radial-gradient(circle at 10% 90%, rgba(184,92,107,0.14), transparent 40%); pointer-events:none;}
+  .eyebrow{font-family:'JetBrains Mono', monospace; font-size:0.75rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--brass); margin-bottom:18px;}
+  .hero h1{font-family:'Fraunces',serif; font-size:clamp(2.4rem, 6vw, 4.6rem); font-weight:600; line-height:1.05; max-width:14ch; position:relative;}
+  .hero p{margin-top:22px; max-width:46ch; color:rgba(247,241,232,0.72); font-size:1.05rem; line-height:1.6; position:relative;}
+  .hero-cta{margin-top:38px; display:inline-flex; align-items:center; gap:10px; background:transparent; border:1px solid rgba(247,241,232,0.35); color:var(--ivory); padding:14px 26px; border-radius:2px; font-weight:600; font-size:0.9rem; width:fit-content; transition:all 0.25s ease; position:relative;}
+  .hero-cta:hover{border-color:var(--brass); background:rgba(176,138,78,0.1); gap:16px;}
+  .services{padding:9vh 6vw; max-width:1200px; margin:0 auto;}
+  .section-head{margin-bottom:48px;}
+  .section-head .eyebrow{color:var(--rose);}
+  .section-head h2{font-family:'Fraunces',serif; font-size:clamp(1.8rem,3.6vw,2.6rem); font-weight:600;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:18px;}
+  .card{background:#fff; border:1px solid rgba(28,26,25,0.1); border-radius:2px; padding:26px; display:flex; flex-direction:column; gap:14px; transition:transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;}
+  .card:hover{transform:translateY(-4px); box-shadow:0 14px 30px rgba(28,26,25,0.09); border-color:var(--brass);}
+  .card.selected{border-color:var(--rose); box-shadow:0 0 0 1px var(--rose) inset;}
+  .card-name{font-family:'Fraunces', serif; font-size:1.25rem; font-weight:600;}
+  .card-desc{font-size:0.88rem; color:rgba(28,26,25,0.62); line-height:1.5;}
+  .card-meta{display:flex; gap:10px; flex-wrap:wrap;}
+  .badge{font-family:'JetBrains Mono', monospace; font-size:0.78rem; padding:4px 10px; border-radius:20px; background:rgba(28,26,25,0.06); color:var(--ink);}
+  .badge.amount{background:rgba(184,92,107,0.12); color:var(--rose-deep); font-weight:600;}
+  .card-select{margin-top:4px; border:1px solid var(--ink); background:transparent; padding:10px 0; font-weight:700; font-size:0.82rem; border-radius:2px; transition:all 0.2s ease;}
+  .card-select:hover{background:var(--ink); color:var(--ivory);}
+  .card.selected .card-select{background:var(--rose); border-color:var(--rose); color:var(--ivory);}
+  .book{background:var(--ink); color:var(--ivory); padding:9vh 6vw;}
+  .book-inner{max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1.3fr 1fr; gap:56px;}
+  .book .section-head h2{color:var(--ivory);}
+  .field{margin-bottom:20px;}
+  .field label{display:block; font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; color:rgba(247,241,232,0.55); margin-bottom:8px; font-family:'JetBrains Mono', monospace;}
+  .field input{width:100%; background:transparent; border:none; border-bottom:1px solid rgba(247,241,232,0.3); color:var(--ivory); padding:10px 2px; font-size:1rem; font-family:'Manrope', sans-serif;}
+  .field input:focus{outline:none; border-color:var(--brass);}
+  .field input::placeholder{color:rgba(247,241,232,0.35);}
+  .slot-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(84px,1fr)); gap:8px; margin-top:6px;}
+  .slot{font-family:'JetBrains Mono', monospace; font-size:0.82rem; padding:10px 4px; text-align:center; border-radius:2px; border:1px solid rgba(247,241,232,0.22); background:transparent; color:var(--ivory); transition:all 0.18s ease;}
+  .slot:hover:not(:disabled){border-color:var(--brass); background:rgba(176,138,78,0.12);}
+  .slot.selected{background:var(--rose); border-color:var(--rose); color:var(--ivory);}
+  .slot:disabled{opacity:0.28; text-decoration:line-through; cursor:not-allowed;}
+  .confirm-btn{margin-top:26px; width:100%; background:var(--rose); color:var(--ivory); border:none; padding:16px; font-weight:700; font-size:0.95rem; border-radius:2px; transition:background 0.2s ease;}
+  .confirm-btn:hover{background:var(--rose-deep);}
+  .confirm-btn:disabled{background:rgba(247,241,232,0.15); color:rgba(247,241,232,0.4); cursor:not-allowed;}
+  .ticket-wrap{position:sticky; top:100px; height:fit-content;}
+  .ticket{background:var(--ivory); color:var(--ink); padding:30px 26px; border-radius:2px; position:relative; box-shadow:0 20px 50px rgba(0,0,0,0.35);}
+  .ticket-label{font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--rose-deep); margin-bottom:18px;}
+  .ticket-row{display:flex; justify-content:space-between; align-items:baseline; padding:9px 0; border-bottom:1px dashed rgba(28,26,25,0.12);}
+  .ticket-key{font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:rgba(28,26,25,0.5);}
+  .ticket-val{font-family:'JetBrains Mono',monospace; font-size:0.95rem; font-weight:700; text-align:right;}
+  .ticket-total{margin-top:20px; padding-top:16px; display:flex; justify-content:space-between; align-items:center;}
+  .ticket-total .ticket-val{font-size:1.5rem; color:var(--rose-deep); font-family:'Fraunces',serif;}
+  .ticket-id{margin-top:10px; font-size:0.68rem; color:rgba(28,26,25,0.35); font-family:'JetBrains Mono',monospace;}
+  .msg{display:none; margin-top:18px; padding:14px 16px; border-radius:2px; font-size:0.85rem;}
+  .msg.show{display:block;}
+  .msg.success{background:rgba(124,140,122,0.18); border:1px solid var(--sage); color:var(--ivory);}
+  .msg.error{background:rgba(184,92,107,0.18); border:1px solid var(--rose); color:var(--ivory);}
+  footer{background:var(--ink-soft); color:rgba(247,241,232,0.6); padding:40px 6vw; display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px; font-size:0.85rem; border-top:1px solid var(--line);}
+  footer strong{color:var(--ivory); font-weight:600;}
+  @media (max-width:820px){ .book-inner{grid-template-columns:1fr;} .ticket-wrap{position:relative; top:0;} }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">Studio <span>Noor</span></div>
+  <a href="#book" class="nav-cta">Book Now</a>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">Hair Studio · Pune</div>
+  <h1>Every appointment, perfectly timed.</h1>
+  <p>Pick your service, see the price up front, and choose a time that actually works for you — no calls, no waiting.</p>
+  <a href="#services" class="hero-cta">See the menu ↓</a>
+</section>
+
+<section class="services" id="services">
+  <div class="section-head">
+    <div class="eyebrow">Menu</div>
+    <h2>Our services</h2>
+  </div>
+  <div class="grid" id="serviceGrid"><p style="color:rgba(28,26,25,0.5)">Loading services…</p></div>
+</section>
+
+<section class="book" id="book">
+  <div class="book-inner">
+    <div>
+      <div class="section-head">
+        <div class="eyebrow">Book</div>
+        <h2>Reserve your slot</h2>
+      </div>
+      <div class="field"><label>Full name</label><input type="text" id="custName" placeholder="Your name"></div>
+      <div class="field"><label>Phone number</label><input type="tel" id="custPhone" placeholder="10-digit mobile number"></div>
+      <div class="field"><label>Date</label><input type="date" id="custDate"></div>
+      <div class="field"><label>Available time slots</label><div class="slot-grid" id="slotGrid"></div></div>
+      <button class="confirm-btn" id="confirmBtn" disabled>Confirm Booking</button>
+      <div class="msg" id="statusMsg"></div>
+    </div>
+
+    <div class="ticket-wrap">
+      <div class="ticket">
+        <div class="ticket-label">Appointment Slip</div>
+        <div class="ticket-row"><span class="ticket-key">TYPE</span><span class="ticket-val" id="tType">— select a service —</span></div>
+        <div class="ticket-row"><span class="ticket-key">DURATION</span><span class="ticket-val" id="tDuration">—</span></div>
+        <div class="ticket-row"><span class="ticket-key">TIME</span><span class="ticket-val" id="tTime">—</span></div>
+        <div class="ticket-total"><span class="ticket-key">AMOUNT</span><span class="ticket-val" id="tAmount">₹0</span></div>
+        <div class="ticket-id" id="tId">REF — pending</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><strong>Studio Noor</strong><br>123 MG Road, Pune, Maharashtra</div>
+  <div><strong>Hours</strong><br>Tue–Sun · 10:00 AM – 7:00 PM</div>
+  <div><strong>Contact</strong><br>+91 84858 33874</div>
+</footer>
+
+<script>
+  // ⚠️ IMPORTANT: If this site is hosted on Netlify and the backend is hosted
+  // separately (e.g. on Render), paste your backend's live URL below.
+  // Example: const API = 'https://studio-noor-backend.onrender.com';
+  // If frontend and backend are on the SAME server, leave this as ''.
+  const API = 'https://PASTE-YOUR-RENDER-URL-HERE.onrender.com';
+  let services = [];
+  let selectedService = null;
+  let selectedTime = null;
+
+  const serviceGrid = document.getElementById('serviceGrid');
+  const slotGrid = document.getElementById('slotGrid');
+  const dateInput = document.getElementById('custDate');
+  const nameInput = document.getElementById('custName');
+  const phoneInput = document.getElementById('custPhone');
+  const confirmBtn = document.getElementById('confirmBtn');
+  const statusMsg = document.getElementById('statusMsg');
+
+  async function loadServices(){
+    try{
+      const res = await fetch(`${API}/api/services`);
+      services = await res.json();
+      serviceGrid.innerHTML = '';
+      services.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-name">${s.name}</div>
+          <div class="card-desc">${s.description || ''}</div>
+          <div class="card-meta">
+            <span class="badge">${s.duration} min</span>
+            <span class="badge amount">₹${s.amount.toLocaleString('en-IN')}</span>
+          </div>
+          <button class="card-select">Select service</button>`;
+        card.querySelector('.card-select').addEventListener('click', () => selectService(s, card));
+        serviceGrid.appendChild(card);
+      });
+    }catch(e){
+      serviceGrid.innerHTML = '<p style="color:var(--rose-deep)">Could not load services. Is the backend running?</p>';
+    }
+  }
+
+  function selectService(s, card){
+    document.querySelectorAll('.card').forEach(c => { c.classList.remove('selected'); c.querySelector('.card-select').textContent='Select service'; });
+    card.classList.add('selected');
+    card.querySelector('.card-select').textContent = 'Selected ✓';
+    selectedService = s;
+    document.getElementById('tType').textContent = s.name;
+    document.getElementById('tDuration').textContent = s.duration + ' min';
+    document.getElementById('tAmount').textContent = '₹' + s.amount.toLocaleString('en-IN');
+    checkFormReady();
+  }
+
+  async function loadAvailability(date){
+    slotGrid.innerHTML = '<p style="color:rgba(247,241,232,0.5); font-size:0.85rem;">Loading slots…</p>';
+    selectedTime = null;
+    document.getElementById('tTime').textContent = '—';
+    try{
+      const res = await fetch(`${API}/api/availability?date=${date}`);
+      const data = await res.json();
+      slotGrid.innerHTML = '';
+      data.slots.forEach(({time, available}) => {
+        const btn = document.createElement('button');
+        btn.className = 'slot';
+        btn.type = 'button';
+        btn.textContent = time;
+        if(!available){ btn.disabled = true; }
+        else{ btn.addEventListener('click', () => selectTime(time, btn)); }
+        slotGrid.appendChild(btn);
+      });
+    }catch(e){
+      slotGrid.innerHTML = '<p style="color:var(--rose)">Could not load time slots.</p>';
+    }
+    checkFormReady();
+  }
+
+  function selectTime(t, btn){
+    document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedTime = t;
+    const d = new Date(dateInput.value);
+    const dateLabel = d.toLocaleDateString('en-IN', {day:'2-digit', month:'short'});
+    document.getElementById('tTime').textContent = `${t}, ${dateLabel}`;
+    checkFormReady();
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.setAttribute('min', today);
+  dateInput.value = today;
+  dateInput.addEventListener('change', () => loadAvailability(dateInput.value));
+
+  [nameInput, phoneInput].forEach(inp => inp.addEventListener('input', checkFormReady));
+
+  function checkFormReady(){
+    const ready = selectedService && selectedTime && nameInput.value.trim() && phoneInput.value.trim().replace(/\D/g,'').length === 10;
+    confirmBtn.disabled = !ready;
+  }
+
+  confirmBtn.addEventListener('click', async () => {
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Booking…';
+    statusMsg.className = 'msg';
+    try{
+      const res = await fetch(`${API}/api/bookings`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          serviceId: selectedService.id,
+          name: nameInput.value.trim(),
+          phone: phoneInput.value.trim(),
+          date: dateInput.value,
+          time: selectedTime
+        })
+      });
+      const data = await res.json();
+      if(!res.ok){ throw new Error(data.error || 'Booking failed.'); }
+
+      document.getElementById('tId').textContent = 'REF — ' + data.ref_code;
+      statusMsg.textContent = `Booked! ${selectedService.name} confirmed for ${selectedTime}. Reference: ${data.ref_code}`;
+      statusMsg.className = 'msg success show';
+      confirmBtn.textContent = 'Booking Confirmed ✓';
+      loadAvailability(dateInput.value);
+    }catch(err){
+      statusMsg.textContent = err.message;
+      statusMsg.className = 'msg error show';
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Confirm Booking';
+    }
+  });
+
+  loadServices();
+  loadAvailability(today);
+</script>
+</body>
+</html>

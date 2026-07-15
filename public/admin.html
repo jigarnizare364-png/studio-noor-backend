@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Noor — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Manrope:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1c1a19; --ivory:#f7f1e8; --rose:#b85c6b; --rose-deep:#9c4a58; --sage:#7c8c7a; }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Manrope',sans-serif; background:var(--ivory); color:var(--ink); padding:5vh 5vw;}
+  h1{font-family:'Fraunces',serif; margin-bottom:6px;}
+  .sub{color:rgba(28,26,25,0.55); margin-bottom:28px; font-size:0.9rem;}
+  .key-bar{display:flex; gap:10px; margin-bottom:26px; max-width:420px;}
+  .key-bar input{flex:1; padding:10px 12px; border:1px solid rgba(28,26,25,0.2); border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:0.85rem;}
+  .key-bar button{padding:10px 18px; border:none; background:var(--ink); color:var(--ivory); border-radius:2px; font-weight:700; cursor:pointer; font-size:0.85rem;}
+  table{width:100%; border-collapse:collapse; background:#fff;}
+  th, td{text-align:left; padding:12px 14px; border-bottom:1px solid rgba(28,26,25,0.08); font-size:0.88rem;}
+  th{font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.05em; text-transform:uppercase; color:rgba(28,26,25,0.5); background:rgba(28,26,25,0.03);}
+  .amt{font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--rose-deep);}
+  .status{padding:3px 10px; border-radius:20px; font-size:0.75rem; font-family:'JetBrains Mono',monospace;}
+  .status.confirmed{background:rgba(124,140,122,0.18); color:#4d5c4b;}
+  .status.cancelled{background:rgba(184,92,107,0.15); color:var(--rose-deep); text-decoration:line-through;}
+  .cancel-btn{border:1px solid var(--rose); background:transparent; color:var(--rose-deep); padding:5px 10px; border-radius:2px; font-size:0.75rem; cursor:pointer;}
+  .cancel-btn:hover{background:var(--rose); color:#fff;}
+  .empty, .err{color:rgba(28,26,25,0.5); padding:20px 0;}
+  .err{color:var(--rose-deep);}
+</style>
+</head>
+<body>
+  <h1>Bookings</h1>
+  <p class="sub">Studio Noor — admin view</p>
+
+  <div class="key-bar">
+    <input type="password" id="adminKey" placeholder="Enter admin key">
+    <button id="loadBtn">View bookings</button>
+  </div>
+
+  <div id="content"></div>
+
+<script>
+  // ⚠️ Same as index.html — paste your Render backend URL here if hosted separately.
+  const API = 'https://PASTE-YOUR-RENDER-URL-HERE.onrender.com';
+  const content = document.getElementById('content');
+  const keyInput = document.getElementById('adminKey');
+
+  document.getElementById('loadBtn').addEventListener('click', loadBookings);
+  keyInput.addEventListener('keydown', e => { if(e.key === 'Enter') loadBookings(); });
+
+  async function loadBookings(){
+    const key = keyInput.value.trim();
+    if(!key){ content.innerHTML = '<p class="err">Enter the admin key first.</p>'; return; }
+    content.innerHTML = '<p class="empty">Loading…</p>';
+    try{
+      const res = await fetch(`${API}/api/admin/bookings`, { headers: { 'x-admin-key': key } });
+      if(res.status === 401){ content.innerHTML = '<p class="err">Wrong admin key.</p>'; return; }
+      const bookings = await res.json();
+      if(bookings.length === 0){ content.innerHTML = '<p class="empty">No bookings yet.</p>'; return; }
+
+      const rows = bookings.map(b => `
+        <tr data-id="${b.id}">
+          <td>${b.ref_code}</td>
+          <td>${b.customer_name}</td>
+          <td>${b.phone}</td>
+          <td>${b.service_name}</td>
+          <td>${b.date}</td>
+          <td>${b.time}</td>
+          <td class="amt">₹${b.amount.toLocaleString('en-IN')}</td>
+          <td><span class="status ${b.status}">${b.status}</span></td>
+          <td>${b.status === 'confirmed' ? `<button class="cancel-btn" onclick="cancelBooking(${b.id}, '${key}')">Cancel</button>` : ''}</td>
+        </tr>`).join('');
+
+      content.innerHTML = `
+        <table>
+          <thead><tr>
+            <th>Ref</th><th>Name</th><th>Phone</th><th>Service</th><th>Date</th><th>Time</th><th>Amount</th><th>Status</th><th></th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+    }catch(e){
+      content.innerHTML = '<p class="err">Could not reach the server.</p>';
+    }
+  }
+
+  async function cancelBooking(id, key){
+    if(!confirm('Cancel this booking?')) return;
+    await fetch(`${API}/api/admin/bookings/${id}/cancel`, { method:'PATCH', headers:{ 'x-admin-key': key } });
+    loadBookings();
+  }
+</script>
+</body>
+</html>
